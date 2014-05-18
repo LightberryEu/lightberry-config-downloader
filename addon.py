@@ -47,10 +47,14 @@ except KeyboardInterrupt, SystemExit:
     sys.exit(0)
 
 if __settings__.getSetting("downloadNow") == "true":
-    ConfigDownload.downloadConfig(__settings__.getSetting("ledConfig"),
-                                  __settings__.getSetting("ledControlSystem"))
-    msgLine = "Sucessfuly downloaded configuration " + __settings__.getSetting(
+    try:
+        ConfigDownload.downloadConfig(__settings__.getSetting("ledConfig"),
+                                      __settings__.getSetting("ledControlSystem"))
+        msgLine = "Sucessfuly downloaded configuration " + __settings__.getSetting(
         "ledConfig") + " for " + __settings__.getSetting("ledControlSystem")
+    except:
+        msgLine = "Error occured. Check your internet connection."
+
     xbmc.executebuiltin('Notification(%s, %s, %d, %s)' % (__addonname__, msgLine, delayTime, __icon__))
 
 __settings__.setSetting("downloadNow","false")

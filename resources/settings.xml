@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <!--MAIN TAB-->
+    <category label="31000">
+        <setting label="31001" type="lsep"/>
+        <setting label="31002" id="ledConfig" type="labelenum" values="12x7|13x7|13x8|14x8|15x8|15x9|17x9|18x10"/>
+        <setting label="31003" id="ledControlSystem" type="labelenum" values="hyperion|boblight"/>
+        <setting label="31004" id="downloadNow" type="bool" default="false" enable="true"/>
+    </category>
+</settings>

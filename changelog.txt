@@ -1,2 +1,5 @@
+1.0.1
+- New folder structure for configs
+
 1.0.0
 - initial version

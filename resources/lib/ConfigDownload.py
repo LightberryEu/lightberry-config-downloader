@@ -23,7 +23,7 @@ import HyperionControl
 configFolder = "/etc/"
 tempFolder = "/tmp/"
 
-lightberryRepoAddress = "http://lightberry.eu/download/"
+lightberryRepoAddress = "http://lightberry.eu/download/General/"
 configOptions = {'hyperion': 'hyperion.config.json', 'boblight': 'boblight.conf'}
 
 hss = HyperionControl.HyperionControl()

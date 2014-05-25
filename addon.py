@@ -58,14 +58,15 @@ if __settings__.getSetting("downloadNow") == "true" \
         ConfigDownload.downloadConfig(__settings__.getSetting("ledConfig"),
                                       __settings__.getSetting("ledControlSystem"))
 
-        if (os.uname()[1] == "raspmbc") :
+        if (os.uname()[1] == "raspbmc") :
             msgLine = "Sucessfuly downloaded configuration " + __settings__.getSetting(
             "ledConfig") + " for " + __settings__.getSetting("ledControlSystem")
             hss = HyperionControl.HyperionControl()
             hss.service("restart")
         else:
             msgLine = "Sucessfuly downloaded configuration " + __settings__.getSetting(
-            "ledConfig") + " for " + __settings__.getSetting("ledControlSystem") + ". Restart Raspberry Pi to apply settings."
+            "ledConfig") + " for " + __settings__.getSetting("ledControlSystem") + "." \
+                                                                                   " Restart Raspberry Pi to apply settings."
 
     except:
         msgLine = "Error occured. Check your internet connection."

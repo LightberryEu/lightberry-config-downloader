@@ -15,21 +15,30 @@
 #  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 #  http://www.gnu.org/copyleft/gpl.html
 import urllib
+import os
 import subprocess
 
-import HyperionControl
 
 
 configFolder = "/etc/"
 tempFolder = "/tmp/"
 
-lightberryRepoAddress = "http://lightberry.eu/download/General/"
 configOptions = {'hyperion': 'hyperion.config.json', 'boblight': 'boblight.conf'}
-
-hss = HyperionControl.HyperionControl()
 
 
 def downloadConfig(config, configFor):
+    if os.uname()[1] == "raspbmc":
+        lightberryRepoAddress = "http://lightberry.eu/download/General/"
+        configFolder = "/etc/"
+        isRaspbmc = True
+    elif os.uname()[1] == "OpenELEC":
+        lightberryRepoAddress = "http://lightberry.eu/download/OpenELEC/"
+        configFolder = "/storage/hyperion/config/"
+        isRaspbmc = False
+    else :
+        raise Exception("Unknown OS")
+
+
     fileAddress = lightberryRepoAddress + config + "/" + configOptions[configFor]
 
     tempFile = tempFolder + configOptions[configFor]
@@ -38,14 +47,13 @@ def downloadConfig(config, configFor):
 
     urllib.urlretrieve(fileAddress, tempFile)
 
-    execute("mv " + destFile + " " + bkpFile, sudo=True)
-    execute("chmod 755 " + bkpFile, sudo=True)
-    execute("chown root:root " + bkpFile, sudo=True)
-    execute("mv " + tempFile + " " + destFile, sudo=True)
-    execute("chmod 755 " + destFile, sudo=True)
-    execute("chown root:root " + destFile, sudo=True)
+    execute("mv " + destFile + " " + bkpFile, sudo=isRaspbmc)
+    execute("chmod 755 " + bkpFile, sudo=isRaspbmc)
+    execute("chown root:root " + bkpFile, sudo=isRaspbmc)
+    execute("mv " + tempFile + " " + destFile, sudo=isRaspbmc)
+    execute("chmod 755 " + destFile, sudo=isRaspbmc)
+    execute("chown root:root " + destFile, sudo=isRaspbmc)
 
-    hss.service("restart")
 
 
 def execute(command, sudo=False):
@@ -57,10 +65,6 @@ def execute(command, sudo=False):
 
 
 def addonConfigUpdate(addonDir):
-    """
-
-    :rtype : bool
-    """
     lightberryAddonConfigLocalVersionFile = addonDir + "/resources/version.info"
     lightberryAddonConfigLocal = addonDir + "/resources/settings.xml"
 

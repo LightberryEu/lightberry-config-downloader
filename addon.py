@@ -15,10 +15,12 @@
 #  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 #  http://www.gnu.org/copyleft/gpl.html
 import sys
+import os
 
 import xbmcaddon
 import xbmc
-from resources.lib import ConfigDownload
+from resources.lib import ConfigDownload, HyperionControl
+
 
 __author__ = "Tomek (lightberry.eu)"
 __url__ = "http://lightberry.eu"
@@ -34,6 +36,9 @@ delayTime = 5000
 msgLine = ""
 exceptionLine = ""
 
+ledConfigPrev = __settings__.getSetting("ledConfig")
+ledControlSystemPrev = __settings__.getSetting("ledControlSystem")
+
 if ConfigDownload.addonConfigUpdate(__addondir__):
     msgLine = "Sucessfuly downloaded new addon configuration."
     xbmc.executebuiltin('Notification(%s, %s, %d, %s)' % (__addonname__, msgLine, delayTime, __icon__))
@@ -46,12 +51,22 @@ try:
 except KeyboardInterrupt, SystemExit:
     sys.exit(0)
 
-if __settings__.getSetting("downloadNow") == "true":
+if __settings__.getSetting("downloadNow") == "true" \
+        or ledConfigPrev != __settings__.getSetting("ledConfig")\
+        or ledControlSystemPrev != __settings__.getSetting("ledControlSystem"):
     try:
         ConfigDownload.downloadConfig(__settings__.getSetting("ledConfig"),
                                       __settings__.getSetting("ledControlSystem"))
-        msgLine = "Sucessfuly downloaded configuration " + __settings__.getSetting(
-        "ledConfig") + " for " + __settings__.getSetting("ledControlSystem")
+
+        if (os.uname()[1] == "raspmbc") :
+            msgLine = "Sucessfuly downloaded configuration " + __settings__.getSetting(
+            "ledConfig") + " for " + __settings__.getSetting("ledControlSystem")
+            hss = HyperionControl.HyperionControl()
+            hss.service("restart")
+        else:
+            msgLine = "Sucessfuly downloaded configuration " + __settings__.getSetting(
+            "ledConfig") + " for " + __settings__.getSetting("ledControlSystem") + ". Restart Raspberry Pi to apply settings."
+
     except:
         msgLine = "Error occured. Check your internet connection."
 

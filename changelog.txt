@@ -1,3 +1,15 @@
+1.0.5
+- Download logic change
+
+1.0.4
+- More fixes for OpenELEC case
+
+1.0.3
+- Fixes for OpenELEC case
+
+1.0.2
+- Support for OpenELEC
+
 1.0.1
 - New folder structure for configs
 

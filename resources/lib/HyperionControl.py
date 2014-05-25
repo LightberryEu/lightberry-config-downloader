@@ -16,6 +16,7 @@
 #  http://www.gnu.org/copyleft/gpl.html
 
 import subprocess
+import os
 
 __author__ = 'lightberry.eu'
 
@@ -32,22 +33,35 @@ class HyperionControl:
         self.processNum()
 
     def processNum(self):
+        if os.uname()[1] == "raspbmc":
+            command = 'ps -eo pid,command | grep "{0:s}" | grep -v grep | awk \'{{print $1}}\''.format(self.hyperiondName)
+        elif os.uname()[1] == "OpenELEC":
+            command = 'ps -e pid,command | grep "{0:s}" | grep -v grep | awk \'{{print $1}}\''.format(self.hyperiondName)
+        else :
+            raise Exception("Unknown OS")
         self.hyperionPid = subprocess.check_output(
-            'ps -eo pid,command | grep "{0:s}" | grep -v grep | awk \'{{print $1}}\''.format(self.hyperiondName),
+             command,
             shell=True)
 
     def service(self, mode):
+        if os.uname()[1] == "raspbmc":
+            sudoRequired = True
+        elif os.uname()[1] == "OpenELEC":
+            sudoRequired = False
+        else :
+            raise Exception("Unknown OS")
+
         try:
             if mode.lower() == "start" or mode.lower() == "restart":
                 self.processNum()
                 if self.hyperionPid == "":
-                    self.execute(self.hyperiondServiceCommand + " start", sudo=True)
+                    self.execute(self.hyperiondServiceCommand + " start", sudo=sudoRequired)
                 else:
-                    self.execute(self.hyperiondServiceCommand + " restart", sudo=True)
+                    self.execute(self.hyperiondServiceCommand + " restart", sudo=sudoRequired)
             elif mode.lower == "stop":
                 self.processNum()
                 if self.hyperionPid != "":
-                    self.execute(self.hyperiondServiceCommand + " stop", sudo=True)
+                    self.execute(self.hyperiondServiceCommand + " stop", sudo=sudoRequired)
         except subprocess.CalledProcessError:
             raise Exception("Something went wrong with hyperion service. \nIs hyperion installed?")
 

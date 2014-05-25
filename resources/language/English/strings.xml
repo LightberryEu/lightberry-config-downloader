@@ -4,5 +4,5 @@
     <string id="31001">LED Config downloader</string>
     <string id="31002">LED Configuration (horizontal x vertical)</string>
     <string id="31003">LED control system</string>
-    <string id="31004">Download config file now</string>
+    <string id="31004">Force download config file</string>
 </strings>

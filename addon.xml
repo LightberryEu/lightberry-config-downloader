@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.service.lightberry"
        name="Lightberry Config Downloader"
-       version="1.0.1"
+       version="1.0.5"
        provider-name="lightberry.eu">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
@@ -12,6 +12,11 @@
         <language>en</language>
         <platform>linux</platform>
         <summary>Lightberry Config Downloader</summary>
-        <description>Lightberry Config Downloader</description>
+        <description><![CDATA[Lightberry Config Downloader
+Simple plugin that downloads hyperion and boblight config files without need to connect through ssh.
+
+Visit our site - lightberry.eu
+        ]]>
+        </description>
     </extension>
 </addon>

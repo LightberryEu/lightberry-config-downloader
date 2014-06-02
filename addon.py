@@ -62,8 +62,7 @@ if __settings__.getSetting("downloadNow") == "true" \
         if (os.uname()[1] != "OpenELEC") :
             msgLine = "Successfully downloaded configuration " + __settings__.getSetting(
             "ledConfig") + " for " + __settings__.getSetting("ledControlSystem")
-            hss = HyperionControl.HyperionControl()
-            hss.service("restart")
+
         else:
             msgLine = "Successfully downloaded configuration " + __settings__.getSetting(
             "ledConfig") + " for " + __settings__.getSetting("ledControlSystem") + ".\n" \
@@ -83,5 +82,8 @@ if __settings__.getSetting("downloadNow") == "true" \
 
         msgLine = "Grabber section replaced "
         xbmc.executebuiltin('Notification(%s, %s, %d, %s)' % (__addonname__, msgLine, delayTime, __icon__))
+
+hss = HyperionControl.HyperionControl()
+hss.service("restart")
 
 __settings__.setSetting("downloadNow","false")

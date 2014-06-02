@@ -38,18 +38,16 @@ class HyperionControl:
         elif os.uname()[1] == "OpenELEC":
             command = 'ps -e pid,command | grep "{0:s}" | grep -v grep | awk \'{{print $1}}\''.format(self.hyperiondName)
         else :
-            raise Exception("Unknown OS")
+            command = 'ps -eo pid,command | grep "{0:s}" | grep -v grep | awk \'{{print $1}}\''.format(self.hyperiondName)
         self.hyperionPid = subprocess.check_output(
              command,
             shell=True)
 
     def service(self, mode):
-        if os.uname()[1] == "raspbmc":
-            sudoRequired = True
-        elif os.uname()[1] == "OpenELEC":
+        if os.uname()[1] == "OpenELEC":
             sudoRequired = False
         else :
-            raise Exception("Unknown OS")
+            sudoRequired = True
 
         try:
             if mode.lower() == "start" or mode.lower() == "restart":

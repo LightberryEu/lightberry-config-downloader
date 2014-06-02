@@ -38,7 +38,9 @@ def downloadConfig(config, configFor):
         configFolder = "/storage/hyperion/config/"
         isRaspbmc = False
     else :
-        raise Exception("Unknown OS")
+        lightberryRepoAddress = "http://lightberry.eu/download/General/"
+        configFolder = "/etc/"
+        isRaspbmc = True
 
     fileAddress = lightberryRepoAddress + config + "/" + configOptions[configFor]
 
@@ -96,7 +98,8 @@ def replaceGrabberSection():
         configFolder = "/storage/hyperion/config/"
         isRaspbmc = False
     else :
-        raise Exception("Unknown OS")
+        configFolder = "/etc/"
+        isRaspbmc = True
 
     tempFile = tempFolder + configOptions["hyperion"]
     destFile = configFolder + configOptions["hyperion"]

@@ -59,7 +59,7 @@ if __settings__.getSetting("downloadNow") == "true" \
         ConfigDownload.downloadConfig(__settings__.getSetting("ledConfig"),
                                       __settings__.getSetting("ledControlSystem"))
 
-        if (os.uname()[1] == "raspbmc") :
+        if (os.uname()[1] != "OpenELEC") :
             msgLine = "Successfully downloaded configuration " + __settings__.getSetting(
             "ledConfig") + " for " + __settings__.getSetting("ledControlSystem")
             hss = HyperionControl.HyperionControl()

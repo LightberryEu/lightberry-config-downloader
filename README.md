@@ -17,4 +17,4 @@ How to install:
    4. Plugin should appear under **Programs** menu
    5. For easy access go **System** -> **Appearance** -> **Skin** -> **Settings** *Click on what appears to be just a spacer* -> **Add-on Shortcuts** -> **Home Page Programs Sub-menu** -> *Set plugin on desired position* (first two are already taken by raspbmc specific add-ons if you are running raspbmc, so pick 3rd or forward place in this case)
 
-Please create issues, functionality requests here - I can use any sugestion, I'm python begginer. Thank you in advance.
+Please create issues, functionality requests here - I can use any sugestion, I'm python begginner. Thank you in advance.

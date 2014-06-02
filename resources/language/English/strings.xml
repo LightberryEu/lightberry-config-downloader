@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <strings>
-    <string id="31000">Lightberry Config</string>
+    <string id="31000">Basic</string>
     <string id="31001">LED Config downloader</string>
     <string id="31002">LED Configuration (horizontal x vertical)</string>
     <string id="31003">LED control system</string>
     <string id="31004">Force download config file</string>
+    <string id="31020">Advanced</string>
+    <string id="31021">Advanced settings</string>
+    <string id="31022">Force download config file</string>
+    <string id="31023">Replace grabber-v4l2 section logic</string>
 </strings>

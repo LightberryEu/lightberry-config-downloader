@@ -35,12 +35,13 @@ __addondir__ = __settings__.getAddonInfo('path')
 delayTime = 5000
 msgLine = ""
 exceptionLine = ""
+devVideoName = "/dev/video"
 
 ledConfigPrev = __settings__.getSetting("ledConfig")
 ledControlSystemPrev = __settings__.getSetting("ledControlSystem")
 
 if ConfigDownload.addonConfigUpdate(__addondir__):
-    msgLine = "Sucessfuly downloaded new addon configuration."
+    msgLine = "Successfully downloaded new addon configuration."
     xbmc.executebuiltin('Notification(%s, %s, %d, %s)' % (__addonname__, msgLine, delayTime, __icon__))
 else:
     msgLine = "Addon Configuration is up to date."
@@ -59,18 +60,28 @@ if __settings__.getSetting("downloadNow") == "true" \
                                       __settings__.getSetting("ledControlSystem"))
 
         if (os.uname()[1] == "raspbmc") :
-            msgLine = "Sucessfuly downloaded configuration " + __settings__.getSetting(
+            msgLine = "Successfully downloaded configuration " + __settings__.getSetting(
             "ledConfig") + " for " + __settings__.getSetting("ledControlSystem")
             hss = HyperionControl.HyperionControl()
             hss.service("restart")
         else:
-            msgLine = "Sucessfuly downloaded configuration " + __settings__.getSetting(
-            "ledConfig") + " for " + __settings__.getSetting("ledControlSystem") + "." \
+            msgLine = "Successfully downloaded configuration " + __settings__.getSetting(
+            "ledConfig") + " for " + __settings__.getSetting("ledControlSystem") + ".\n" \
                                                                                    " Restart Raspberry Pi to apply settings."
 
     except:
-        msgLine = "Error occured. Check your internet connection."
+        msgLine = "Error occurred. Check your internet connection."
 
     xbmc.executebuiltin('Notification(%s, %s, %d, %s)' % (__addonname__, msgLine, delayTime, __icon__))
+
+
+    if ((os.path.exists(devVideoName) and __settings__.getSetting("grabberReplaceLogic") == "Default") \
+            or __settings__.getSetting("grabberReplaceLogic") == "Force replace") \
+            and __settings__.getSetting("ledControlSystem") == "hyperion":
+        
+        ConfigDownload.replaceGrabberSection()
+
+        msgLine = "Grabber section replaced "
+        xbmc.executebuiltin('Notification(%s, %s, %d, %s)' % (__addonname__, msgLine, delayTime, __icon__))
 
 __settings__.setSetting("downloadNow","false")

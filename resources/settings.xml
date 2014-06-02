@@ -5,6 +5,11 @@
         <setting label="31001" type="lsep"/>
         <setting label="31002" id="ledConfig" type="labelenum" values="12x7|13x7|13x8|14x8|15x8|15x9|17x9|18x10"/>
         <setting label="31003" id="ledControlSystem" type="labelenum" values="hyperion|boblight"/>
-        <setting label="31004" id="downloadNow" type="bool" default="false" enable="true"/>
+    </category>
+    <!-- Advanced settings -->
+    <category label="31020">
+        <setting label="31021" type="lsep"/>
+        <setting label="31022" id="downloadNow" type="bool" default="false" enable="true"/>
+        <setting label="31023" id="grabberReplaceLogic" type="labelenum" values="Default|Force replace|Force preserve"/>
     </category>
 </settings>

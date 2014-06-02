@@ -1,3 +1,6 @@
+1.0.6
+- Add replace grabber-v4l2 section
+
 1.0.5
 - Download logic change
 

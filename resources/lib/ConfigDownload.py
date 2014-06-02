@@ -16,11 +16,13 @@
 #  http://www.gnu.org/copyleft/gpl.html
 import urllib
 import os
+import re
 import subprocess
 
+infoStr = "/// ***\n" \
+          "        /// Section for \"grabber-v4l2\" commented out.\n" \
+          "        /// Configure v4l to use this feature\n"
 
-
-configFolder = "/etc/"
 tempFolder = "/tmp/"
 
 configOptions = {'hyperion': 'hyperion.config.json', 'boblight': 'boblight.conf'}
@@ -37,7 +39,6 @@ def downloadConfig(config, configFor):
         isRaspbmc = False
     else :
         raise Exception("Unknown OS")
-
 
     fileAddress = lightberryRepoAddress + config + "/" + configOptions[configFor]
 
@@ -86,3 +87,24 @@ def addonConfigUpdate(addonDir):
         return True
     else:
         return False
+
+def replaceGrabberSection():
+    if os.uname()[1] == "raspbmc":
+        configFolder = "/etc/"
+        isRaspbmc = True
+    elif os.uname()[1] == "OpenELEC":
+        configFolder = "/storage/hyperion/config/"
+        isRaspbmc = False
+    else :
+        raise Exception("Unknown OS")
+
+    tempFile = tempFolder + configOptions["hyperion"]
+    destFile = configFolder + configOptions["hyperion"]
+
+    with open(destFile, 'r') as f:
+        with open(tempFile, 'w+') as t:
+            t.write(re.sub(r"(\"grabber-v4l2\")+(.*)\n((.*)\{([\s\S]*?)\}(.*),)",infoStr, f.read(), re.MULTILINE))
+
+    execute("mv " + tempFile + " " + destFile, sudo=isRaspbmc)
+    execute("chmod 755 " + destFile, sudo=isRaspbmc)
+    execute("chown root:root " + destFile, sudo=isRaspbmc)

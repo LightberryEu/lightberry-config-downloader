@@ -35,7 +35,7 @@ def downloadConfig(config, configFor):
         isRaspbmc = True
     elif os.uname()[1] == "OpenELEC":
         lightberryRepoAddress = "http://lightberry.eu/download/OpenELEC/"
-        configFolder = "/storage/hyperion/config/"
+        configFolder = "/storage/.config/"
         isRaspbmc = False
     else :
         lightberryRepoAddress = "http://lightberry.eu/download/General/"
@@ -95,7 +95,7 @@ def replaceGrabberSection():
         configFolder = "/etc/"
         isRaspbmc = True
     elif os.uname()[1] == "OpenELEC":
-        configFolder = "/storage/hyperion/config/"
+        configFolder = "/storage/.config/"
         isRaspbmc = False
     else :
         configFolder = "/etc/"

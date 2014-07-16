@@ -83,7 +83,8 @@ if __settings__.getSetting("downloadNow") == "true" \
         msgLine = "Grabber section replaced "
         xbmc.executebuiltin('Notification(%s, %s, %d, %s)' % (__addonname__, msgLine, delayTime, __icon__))
 
-hss = HyperionControl.HyperionControl()
-hss.service("restart")
+if os.uname()[1] != "OpenELEC":
+    hss = HyperionControl.HyperionControl()
+    hss.service("restart")
 
 __settings__.setSetting("downloadNow","false")

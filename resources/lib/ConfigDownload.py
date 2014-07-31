@@ -32,15 +32,15 @@ def downloadConfig(config, configFor):
     if os.uname()[1] == "raspbmc":
         lightberryRepoAddress = "http://lightberry.eu/download/General/"
         configFolder = "/etc/"
-        isRaspbmc = True
+        replaceEffectsInd = False
     elif os.uname()[1] == "OpenELEC":
-        lightberryRepoAddress = "http://lightberry.eu/download/OpenELEC/"
+        lightberryRepoAddress = "http://lightberry.eu/download/General/"
         configFolder = "/storage/.config/"
-        isRaspbmc = False
+        replaceEffectsInd = True
     else :
         lightberryRepoAddress = "http://lightberry.eu/download/General/"
         configFolder = "/etc/"
-        isRaspbmc = True
+        replaceEffectsInd = False
 
     fileAddress = lightberryRepoAddress + config + "/" + configOptions[configFor]
 
@@ -50,22 +50,40 @@ def downloadConfig(config, configFor):
 
     urllib.urlretrieve(fileAddress, tempFile)
 
-    execute("mv " + destFile + " " + bkpFile, sudo=isRaspbmc)
-    execute("chmod 755 " + bkpFile, sudo=isRaspbmc)
-    execute("chown root:root " + bkpFile, sudo=isRaspbmc)
-    execute("mv " + tempFile + " " + destFile, sudo=isRaspbmc)
-    execute("chmod 755 " + destFile, sudo=isRaspbmc)
-    execute("chown root:root " + destFile, sudo=isRaspbmc)
+    if replaceEffectsInd:
+        replaceEffectsFolder(tempFile)
 
+    mvFromTo(destFile,bkpFile)
+    mvFromTo(tempFile,destFile)
 
+def replaceEffectsFolder(tfile):
+    tempFile = tfile + "_replace"
+    destFile = tfile
 
-def execute(command, sudo=False):
-    if sudo:
+    with open(destFile, 'r') as f:
+        with open(tempFile, 'w+') as t:
+            t.write(f.read().replace('"/opt/hyperion/effects"','"/storage/hyperion/effects"',1))
+
+    mvFromTo(tempFile,destFile)
+
+def execute(command):
+    if os.uname()[1] == "raspbmc":
+        s = True
+    elif os.uname()[1] == "OpenELEC":
+        s = False
+    else :
+        s = False
+
+    if s:
         child = subprocess.Popen("sudo " + command, shell=True)
     else:
         child = subprocess.Popen(command, shell=True)
     child.wait()
 
+def mvFromTo(f,t):
+    execute("mv " + f + " " + t)
+    execute("chmod 755 " + t)
+    execute("chown root:root " + t)
 
 def addonConfigUpdate(addonDir):
     lightberryAddonConfigLocalVersionFile = addonDir + "/resources/version.info"
@@ -93,13 +111,10 @@ def addonConfigUpdate(addonDir):
 def replaceGrabberSection():
     if os.uname()[1] == "raspbmc":
         configFolder = "/etc/"
-        isRaspbmc = True
     elif os.uname()[1] == "OpenELEC":
         configFolder = "/storage/.config/"
-        isRaspbmc = False
     else :
         configFolder = "/etc/"
-        isRaspbmc = True
 
     tempFile = tempFolder + configOptions["hyperion"]
     destFile = configFolder + configOptions["hyperion"]
@@ -108,6 +123,4 @@ def replaceGrabberSection():
         with open(tempFile, 'w+') as t:
             t.write(re.sub(r"(\"grabber-v4l2\")+(.*)\n((.*)\{([\s\S]*?)\}(.*),)",infoStr, f.read(), re.MULTILINE))
 
-    execute("mv " + tempFile + " " + destFile, sudo=isRaspbmc)
-    execute("chmod 755 " + destFile, sudo=isRaspbmc)
-    execute("chown root:root " + destFile, sudo=isRaspbmc)
+    mvFromTo(tempFile, destFile)

@@ -35,7 +35,7 @@ __addondir__ = __settings__.getAddonInfo('path')
 delayTime = 5000
 msgLine = ""
 exceptionLine = ""
-devVideoName = "/dev/video"
+devVideoName = "/dev/video0"
 
 ledConfigPrev = __settings__.getSetting("ledConfig")
 ledControlSystemPrev = __settings__.getSetting("ledControlSystem")
@@ -74,7 +74,7 @@ if __settings__.getSetting("downloadNow") == "true" \
     xbmc.executebuiltin('Notification(%s, %s, %d, %s)' % (__addonname__, msgLine, delayTime, __icon__))
 
 
-    if ((os.path.exists(devVideoName) and __settings__.getSetting("grabberReplaceLogic") == "Default") \
+    if ((not os.path.exists(devVideoName) and __settings__.getSetting("grabberReplaceLogic") == "Default") \
             or __settings__.getSetting("grabberReplaceLogic") == "Force replace") \
             and __settings__.getSetting("ledControlSystem") == "hyperion":
         

@@ -52,36 +52,43 @@ try:
 except KeyboardInterrupt, SystemExit:
     sys.exit(0)
 
-if __settings__.getSetting("downloadNow") == "true" \
-        or ledConfigPrev != __settings__.getSetting("ledConfig")\
-        or ledControlSystemPrev != __settings__.getSetting("ledControlSystem"):
+if __settings__.getSetting("fileSource") == "Internet":
+    if __settings__.getSetting("downloadNow") == "true" \
+            or ledConfigPrev != __settings__.getSetting("ledConfig")\
+            or ledControlSystemPrev != __settings__.getSetting("ledControlSystem"):
+        try:
+            ConfigDownload.downloadConfig(__settings__.getSetting("ledConfig"),
+                                          __settings__.getSetting("ledControlSystem"))
+
+            if os.uname()[1] != "OpenELEC" :
+                msgLine = "Successfully downloaded configuration " + __settings__.getSetting(
+                "ledConfig") + " for " + __settings__.getSetting("ledControlSystem")
+
+            else:
+                msgLine = "Successfully downloaded configuration " + __settings__.getSetting(
+                "ledConfig") + " for " + __settings__.getSetting("ledControlSystem") + ".\n" \
+
+        except:
+            msgLine = "Error occurred. Check your internet connection."
+
+        xbmc.executebuiltin('Notification(%s, %s, %d, %s)' % (__addonname__, msgLine, delayTime, __icon__))
+
+        if ((not os.path.exists(devVideoName) and __settings__.getSetting("grabberReplaceLogic") == "Default") \
+                or __settings__.getSetting("grabberReplaceLogic") == "Force replace") \
+                and __settings__.getSetting("ledControlSystem") == "hyperion":
+
+            ConfigDownload.replaceGrabberSection()
+
+            msgLine = "Grabber section replaced "
+            xbmc.executebuiltin('Notification(%s, %s, %d, %s)' % (__addonname__, msgLine, delayTime, __icon__))
+else:
     try:
-        ConfigDownload.downloadConfig(__settings__.getSetting("ledConfig"),
-                                      __settings__.getSetting("ledControlSystem"))
-
-        if (os.uname()[1] != "OpenELEC") :
-            msgLine = "Successfully downloaded configuration " + __settings__.getSetting(
-            "ledConfig") + " for " + __settings__.getSetting("ledControlSystem")
-
-        else:
-            msgLine = "Successfully downloaded configuration " + __settings__.getSetting(
-            "ledConfig") + " for " + __settings__.getSetting("ledControlSystem") + ".\n" \
-                                                                                   " Restart Raspberry Pi to apply settings."
-
+        ConfigDownload.copyFromUsb(__settings__.getSetting("ledControlSystem"))
+        msgLine = "Configuration File successfully copied."
     except:
-        msgLine = "Error occurred. Check your internet connection."
+        msgLine = "No configuration file found."
 
     xbmc.executebuiltin('Notification(%s, %s, %d, %s)' % (__addonname__, msgLine, delayTime, __icon__))
-
-
-    if ((not os.path.exists(devVideoName) and __settings__.getSetting("grabberReplaceLogic") == "Default") \
-            or __settings__.getSetting("grabberReplaceLogic") == "Force replace") \
-            and __settings__.getSetting("ledControlSystem") == "hyperion":
-        
-        ConfigDownload.replaceGrabberSection()
-
-        msgLine = "Grabber section replaced "
-        xbmc.executebuiltin('Notification(%s, %s, %d, %s)' % (__addonname__, msgLine, delayTime, __icon__))
 
 if os.uname()[1] != "OpenELEC":
     hss = HyperionControl.HyperionControl()

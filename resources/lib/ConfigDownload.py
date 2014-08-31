@@ -85,13 +85,18 @@ def mvFromTo(f,t):
     execute("chmod 755 " + t)
     execute("chown root:root " + t)
 
+def cpFromTo(f,t):
+    execute("cp " + f + " " + t)
+    execute("chmod 755 " + t)
+    execute("chown root:root " + t)
+
 def addonConfigUpdate(addonDir):
     lightberryAddonConfigLocalVersionFile = addonDir + "/resources/version.info"
     lightberryAddonConfigLocal = addonDir + "/resources/settings.xml"
 
-    lightberryAddonConfigRemoteVersionFile = "http://img.lightberry.eu/xbmcAddons/config-downloader/version.info"
+    lightberryAddonConfigRemoteVersionFile = "http://img.lightberry.eu/xbmcAddons/config-downloaderV2/version.info"
     lightberryAddonConfigRemoteVersionTmp = addonDir + "/resources/version.info.remote"
-    lightberryAddonConfigRemote = "http://img.lightberry.eu/xbmcAddons/config-downloader/settings.xml"
+    lightberryAddonConfigRemote = "http://img.lightberry.eu/xbmcAddons/config-downloaderV2/settings.xml"
 
     urllib.urlretrieve(lightberryAddonConfigRemoteVersionFile, lightberryAddonConfigRemoteVersionTmp)
 
@@ -124,3 +129,33 @@ def replaceGrabberSection():
             t.write(re.sub(r"(\"grabber-v4l2\")+(.*)\n((.*)\{([\s\S]*?)\}(.*),)",infoStr, f.read(), re.MULTILINE))
 
     mvFromTo(tempFile, destFile)
+
+def copyFromUsb(configFor):
+    if os.uname()[1] == "raspbmc":
+        configFolder = "/etc/"
+    elif os.uname()[1] == "OpenELEC":
+        configFolder = "/storage/.config/"
+    else :
+        configFolder = "/etc/"
+
+    destFile = configFolder + configOptions[configFor]
+
+    filePath = findFileToCopy(configOptions[configFor])
+    if filePath != "":
+        cpFromTo(filePath,destFile)
+    else:
+        raise Exception("File not found")
+
+def find(name, path):
+    for root, dirs, files in os.walk(path):
+        if name in files:
+            return os.path.join(root, name)
+
+    return ""
+
+def findFileToCopy(fileName):
+    try:
+        usbMediaPath = "/media"
+        return find(fileName, usbMediaPath)
+    except:
+        return ""

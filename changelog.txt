@@ -1,3 +1,6 @@
+1.2.0
+- Add copy from USB Pendrive for model A
+
 1.1.0
 - Add grabber section to OpenELEC download
 
